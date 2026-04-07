@@ -1,61 +1,33 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { existsSync, readFileSync } from 'node:fs';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../generated/prisma/client';
 
 @Injectable()
-export class PrismaService
-  extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
-  private static loadRuntimeEnvFiles(): void {
-    const env = process.env['NODE_ENV']?.trim() || 'development';
-    const dotenvFiles = [
-      `.env.${env}.local`,
-      `.env.${env}`,
-      '.env.local',
-      '.env',
-    ];
-
-    for (const file of dotenvFiles) {
-      if (!existsSync(file)) continue;
-
-      const content = readFileSync(file, 'utf8');
-      for (const line of content.split(/\r?\n/)) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) continue;
-
-        const separator = trimmed.indexOf('=');
-        if (separator < 1) continue;
-
-        const key = trimmed.slice(0, separator).trim();
-        const value = trimmed.slice(separator + 1).trim();
-        if (!(key in process.env)) {
-          process.env[key] = value;
-        }
-      }
-    }
-  }
-
+export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
-    PrismaService.loadRuntimeEnvFiles();
+    const adapter = new PrismaPg({
+      connectionString: process.env.DATABASE_URL as string,
+    });
+    super({ adapter });
+  }
 
-    const connectionString = process.env['DATABASE_URL'];
+  async onModuleInit() {
+    await this.$connect();
 
-    if (!connectionString) {
-      throw new Error('DATABASE_URL is required to initialize PrismaClient');
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+      console.log('Prisma connected, but DATABASE_URL is not set.');
+      return;
     }
 
-    super({
-      adapter: new PrismaPg({ connectionString }),
-    });
-  }
-
-  async onModuleInit(): Promise<void> {
-    await this.$connect();
-  }
-
-  async onModuleDestroy(): Promise<void> {
-    await this.$disconnect();
+    try {
+      const parsed = new URL(dbUrl);
+      const databaseName = parsed.pathname.replace(/^\//, '') || '(unknown-db)';
+      const host = parsed.hostname || '(unknown-host)';
+      const port = parsed.port || '(default-port)';
+      console.log(`Prisma connected to ${host}:${port}/${databaseName}`);
+    } catch {
+      console.log('Prisma connected, but DATABASE_URL could not be parsed.');
+    }
   }
 }

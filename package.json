@@ -23,12 +23,20 @@
     "generate:dev": "cross-env NODE_ENV=development prisma generate"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/schedule": "^6.1.1",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
+    "axios": "^1.14.0",
+    "axios-retry": "^4.5.0",
+    "bullmq": "^5.73.0",
     "cross-env": "^10.1.0",
+    "date-fns-tz": "^3.2.0",
+    "ioredis": "^5.10.1",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
