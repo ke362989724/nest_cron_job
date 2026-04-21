@@ -31,6 +31,24 @@
 $ npm install
 ```
 
+## Environment files
+
+The app loads its environment variables from one of these files based on `NODE_ENV`:
+
+- `.env.development`
+- `.env.production`
+- `env.uat`
+
+For `NODE_ENV=uat`, the app checks `env.uat` first and then falls back to `.env.uat`.
+
+Available scripts:
+
+```bash
+$ npm run start:dev
+$ npm run start:prod
+$ npm run start:uat
+```
+
 ## Compile and run the project
 
 ```bash
@@ -65,6 +83,23 @@ $ curl http://localhost:3000/jobs/demo
 ```
 
 Job processing logs are printed by the Nest worker in the application output.
+
+## FMP Axios service
+
+The shared Nest Axios instance is configured for Financial Modeling Prep with:
+
+- `FMP_BASE_URL`
+- `FMP_API_KEY`
+- automatic `apikey` query param injection
+- retry handling via `axios-retry`
+- response unwrapping to `response.data`
+
+Inject `FmpApiService` and call methods such as:
+
+```ts
+fmpApiService.stockSymbolAPI({ query: 'AAPL', limit: 10 });
+fmpApiService.realTimePriceAPI({ symbol: 'AAPL' });
+```
 
 ## Run tests
 
