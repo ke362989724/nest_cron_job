@@ -1,10 +1,11 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FmpApiService } from './http/fmp-api.service';
+import { JsonFileLogger } from './logger/json-file.logger';
 
 @Injectable()
 export class AppService implements OnModuleInit {
-  private readonly logger = new Logger(AppService.name);
+  private readonly logger = new JsonFileLogger(AppService.name);
 
   constructor(
     private readonly fmpApiService: FmpApiService,
