@@ -3,7 +3,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 export class JsonFileLogger extends ConsoleLogger {
-  private readonly logFilePath: string;
   private readonly logsDir: string;
 
   constructor(context?: string) {
@@ -12,9 +11,10 @@ export class JsonFileLogger extends ConsoleLogger {
       timestamp: true,
     });
 
-    this.logsDir = path.resolve(process.env.LOG_DIR ?? path.join(process.cwd(), 'logs'));
+    this.logsDir = path.resolve(
+      process.env.LOG_DIR ?? path.join(process.cwd(), 'logs'),
+    );
     fs.mkdirSync(this.logsDir, { recursive: true });
-    this.logFilePath = path.join(this.logsDir, 'app.log');
   }
 
   log(message: any, context?: string): void {
@@ -54,7 +54,7 @@ export class JsonFileLogger extends ConsoleLogger {
     stack?: string,
   ): void {
     const payload: Record<string, unknown> = {
-      timestamp: new Date().toISOString(),
+      timestamp: Math.floor(Date.now() / 1000),
       level,
       context,
       message,
@@ -65,13 +65,30 @@ export class JsonFileLogger extends ConsoleLogger {
     }
 
     const line = `${JSON.stringify(payload)}\n`;
+    const appLogFilePath = path.join(
+      this.logsDir,
+      this.getDatedFileName('app'),
+    );
     const levelFilePath = path.join(
       this.logsDir,
-      `${this.getLevelFileName(level)}.log`,
+      this.getDatedFileName(this.getLevelFileName(level)),
     );
 
-    fs.appendFileSync(this.logFilePath, line, { encoding: 'utf8' });
+    fs.appendFileSync(appLogFilePath, line, { encoding: 'utf8' });
     fs.appendFileSync(levelFilePath, line, { encoding: 'utf8' });
+  }
+
+  private getDatedFileName(baseName: string): string {
+    return `${this.getDateString()}-${baseName}.log`;
+  }
+
+  private getDateString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   private getLevelFileName(level: LogLevel | 'fatal'): string {
