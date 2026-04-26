@@ -9,6 +9,7 @@ import { HttpRetryConfigService } from './http/http-retry.config.service';
 import { DemoQueueProcessor } from './queue/demo-queue.processor';
 import { DemoQueueProducer } from './queue/demo-queue.producer';
 import { DEMO_QUEUE } from './queue/queue.constants';
+import { PrismaModule } from './prisma/prisma.module';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const envFilePath =
@@ -16,6 +17,7 @@ const envFilePath =
 
 @Module({
   imports: [
+    PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath,
@@ -41,6 +43,7 @@ const envFilePath =
     BullModule.registerQueue({
       name: DEMO_QUEUE,
     }),
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [

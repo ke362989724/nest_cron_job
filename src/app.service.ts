@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FmpApiService } from './http/fmp-api.service';
 import { JsonFileLogger } from './logger/json-file.logger';
+import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -10,6 +11,7 @@ export class AppService implements OnModuleInit {
   constructor(
     private readonly fmpApiService: FmpApiService,
     private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async onModuleInit(): Promise<void> {
