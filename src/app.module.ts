@@ -45,6 +45,9 @@ const envFilePath =
     BullModule.registerQueue({
       name: DEMO_QUEUE,
     }),
+    BullModule.registerQueue({
+      name: 'task-queue',
+    }),
     PrismaModule,
   ],
   controllers: [AppController],
