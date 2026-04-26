@@ -4,27 +4,13 @@ import { FmpApiService } from './http/fmp-api.service';
 import { JsonFileLogger } from './logger/json-file.logger';
 
 @Injectable()
-export class AppService implements OnModuleInit {
+export class AppService {
   private readonly logger = new JsonFileLogger(AppService.name);
 
   constructor(
     private readonly fmpApiService: FmpApiService,
     private readonly configService: ConfigService,
   ) {}
-
-  async onModuleInit(): Promise<void> {
-    const ticker = this.configService.get<string>('FMP_TEST_TICKER', 'AAPL');
-
-    try {
-      const result = await this.fmpApiService.stockDailyPriceAPI({ ticker });
-      this.logger.log(
-        `stockDailyPriceAPI called for ${ticker}. Returned ${result.length} rows.`,
-      );
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`stockDailyPriceAPI call failed: ${message}`);
-    }
-  }
 
   getHello(): string {
     return 'Hello World!';

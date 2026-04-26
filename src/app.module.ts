@@ -10,6 +10,7 @@ import { DemoQueueProcessor } from './queue/demo-queue.processor';
 import { DemoQueueProducer } from './queue/demo-queue.producer';
 import { DEMO_QUEUE } from './queue/queue.constants';
 import { PrismaModule } from './prisma/prisma.module';
+import { TaskModule } from './task/task.module';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const envFilePath =
@@ -17,6 +18,7 @@ const envFilePath =
 
 @Module({
   imports: [
+    TaskModule,
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
