@@ -4,15 +4,15 @@ import { Queue } from 'bullmq';
 import { DEMO_JOB, DEMO_QUEUE } from './queue.constants';
 
 @Injectable()
-export class DemoQueueProducer {
+export class TaskQueueProducer {
   constructor(@InjectQueue(DEMO_QUEUE) private readonly demoQueue: Queue) {}
 
-  async enqueueDemoJob(payload: Record<string, unknown>) {
+  async enqueueTaskJob(payload: Record<string, unknown>) {
     return this.demoQueue.add(DEMO_JOB, payload, {
-      attempts: 3,
+      attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 1000,
+        delay: 6000,
       },
       removeOnComplete: true,
       removeOnFail: false,

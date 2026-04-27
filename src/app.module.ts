@@ -6,8 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FmpApiService } from './http/fmp-api.service';
 import { HttpRetryConfigService } from './http/http-retry.config.service';
-import { DemoQueueProcessor } from './queue/demo-queue.processor';
-import { DemoQueueProducer } from './queue/demo-queue.producer';
+import { DemoQueueProcessor } from './queue/task-queue.processor';
+import { TaskQueueProducer } from './queue/task-queue.producer';
 import { DEMO_QUEUE } from './queue/queue.constants';
 import { PrismaModule } from './prisma/prisma.module';
 import { TaskModule } from './task/task.module';
@@ -55,7 +55,7 @@ const envFilePath =
     AppService,
     FmpApiService,
     HttpRetryConfigService,
-    DemoQueueProducer,
+    TaskQueueProducer,
     DemoQueueProcessor,
   ],
 })
