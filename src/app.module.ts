@@ -6,9 +6,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FmpApiService } from './http/fmp-api.service';
 import { HttpRetryConfigService } from './http/http-retry.config.service';
-import { DemoQueueProcessor } from './queue/task-queue.processor';
+import { TaskQueueProcessor } from './queue/task-queue.processor';
 import { TaskQueueProducer } from './queue/task-queue.producer';
-import { DEMO_QUEUE } from './queue/queue.constants';
+import { TASK_QUEUE } from './queue/queue.constants';
 import { PrismaModule } from './prisma/prisma.module';
 import { TaskModule } from './task/task.module';
 
@@ -43,7 +43,7 @@ const envFilePath =
       }),
     }),
     BullModule.registerQueue({
-      name: DEMO_QUEUE,
+      name: TASK_QUEUE,
     }),
     BullModule.registerQueue({
       name: 'task-queue',
@@ -56,7 +56,7 @@ const envFilePath =
     FmpApiService,
     HttpRetryConfigService,
     TaskQueueProducer,
-    DemoQueueProcessor,
+    TaskQueueProcessor,
   ],
 })
 export class AppModule {}

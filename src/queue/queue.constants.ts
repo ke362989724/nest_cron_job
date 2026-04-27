@@ -1,2 +1,1 @@
-export const DEMO_QUEUE = 'task-queue';
-export const DEMO_JOB = 'task-job';
+export const TASK_QUEUE = 'task-queue';

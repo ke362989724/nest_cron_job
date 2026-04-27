@@ -12,7 +12,7 @@ export class TaskService implements OnModuleInit {
   async onModuleInit() {
     const tickers = await this.allTicker();
 
-    await this.taskQueueProducer.enqueueTaskJob({
+    await this.taskQueueProducer.enqueueTaskJob('first', {
       source: TaskService.name,
       tickerCount: tickers.length,
       firstFiveSymbols: tickers.slice(0, 5).map((ticker) => ticker.symbol),

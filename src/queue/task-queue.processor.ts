@@ -1,16 +1,16 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { DEMO_JOB, DEMO_QUEUE } from './queue.constants';
+import { TASK_QUEUE } from './queue.constants';
 
-@Processor(DEMO_QUEUE, {
+@Processor(TASK_QUEUE, {
   limiter: {
     max: 300,
     duration: 60000,
   },
 })
-export class DemoQueueProcessor extends WorkerHost {
-  private readonly logger = new Logger(DemoQueueProcessor.name);
+export class TaskQueueProcessor extends WorkerHost {
+  private readonly logger = new Logger(TaskQueueProcessor.name);
 
   process(job: Job<Record<string, unknown>>): Promise<void> {
     switch (job.name) {
@@ -27,8 +27,8 @@ export class DemoQueueProcessor extends WorkerHost {
         );
         break;
       default:
-        throw new Error(`Unknown job type: ${job.name}`);
         this.logger.warn(`Received unknown job type: ${job.name}`);
+        return Promise.resolve();
     }
     return Promise.resolve();
   }

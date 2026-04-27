@@ -4,13 +4,13 @@ import { TaskService } from './task.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bullmq';
 import { TaskQueueProducer } from 'src/queue/task-queue.producer';
-import { DEMO_QUEUE } from 'src/queue/queue.constants';
+import { TASK_QUEUE } from 'src/queue/queue.constants';
 
 @Module({
   imports: [
     PrismaModule,
     ScheduleModule.forRoot(),
-    BullModule.registerQueue({ name: DEMO_QUEUE }),
+    BullModule.registerQueue({ name: TASK_QUEUE }),
   ],
   providers: [TaskService, TaskQueueProducer],
 })
